@@ -1,10 +1,10 @@
-import 'package:expencetracker/screens/add_expence.dart';
-import 'package:expencetracker/screens/detail_sceen.dart';
 import 'package:expencetracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
+
+void main() async{
+ 
   runApp(const MyApp());
 }
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home:HomeScreen()
+      home:const HomeScreen()
     );
   }
 }

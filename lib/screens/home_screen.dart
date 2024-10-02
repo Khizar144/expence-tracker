@@ -13,11 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // Variable to track the selected tab index
+  final int _selectedIndex = 0; // Variable to track the selected tab index
 
   final List<Widget> _pages = [
-    Dashboard(),
-    DetailScreen(),
+    const Dashboard(),
+    const DetailScreen(),
   ];
 
   @override
@@ -38,16 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 50,
         child: FloatingActionButton(
           onPressed: () {
-            Get.to(() => AddExpence());
+            Get.to(() => const AddExpence());
           },
           backgroundColor: Colors.transparent,
           elevation: 0,
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [Colors.purple, Colors.blue, Colors.pink],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

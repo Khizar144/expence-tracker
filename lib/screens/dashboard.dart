@@ -1,6 +1,7 @@
 import 'package:expencetracker/constants/app_colors.dart';
 import 'package:expencetracker/controller/transection_controller.dart';
-import 'package:expencetracker/model/Transaction.dart';
+import 'package:expencetracker/model/my_transaction.dart';
+
 import 'package:expencetracker/screens/detail_sceen.dart';
 import 'package:expencetracker/utils/transection_tile.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,10 @@ class _DashboardState extends State<Dashboard> {
   // Controller
   final TransectionController _controller = Get.put(TransectionController());
 
+  
   // Method to get recent transactions
-  List<Transaction> getRecentTransactions() {
-    List<Transaction> recentTransactions = [];
+    List<MyTransaction> getRecentTransactions() {
+    List<MyTransaction> recentTransactions = [];
     
     // Get last two income transactions
     var incomeTransactions = _controller.getTransactions('Income');
@@ -31,6 +33,7 @@ class _DashboardState extends State<Dashboard> {
 
     return recentTransactions;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
-                  image: AssetImage('assets/images/bg.png'),
+                  image: const AssetImage('assets/images/bg.png'),
                   fit: BoxFit.fitWidth,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.3),
@@ -58,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
+                  const Text(
                     "Available Balance",
                     style: TextStyle(
                       color: Colors.white,
@@ -77,46 +80,8 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Income",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Text(
-                            _controller.totalIncome.value.toStringAsFixed(2),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Expense",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Text(
-                            _controller.totalExpense.value.toStringAsFixed(2),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                        ],
-                      ),
+                      _buildBalanceColumn("Income", _controller.totalIncome),
+                      _buildBalanceColumn("Expense", _controller.totalExpense),
                     ],
                   ),
                 ],
@@ -124,30 +89,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Transactions",
-                style: TextStyle(
-                    color: AppColors.textColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-              InkWell(
-                onTap: () {
-                  Get.to(() => DetailScreen());
-                },
-                child: Text(
-                  "View All",
-                  style: TextStyle(
-                      color: AppColors.textColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
+          _buildTransactionsHeader(),
           const SizedBox(height: 10),
           Expanded(
             child: Obx(() {
@@ -157,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
                 itemBuilder: (context, index) {
                   var transaction = recentTransactions[index];
                   return Dismissible(
-                    key: ValueKey(transaction), // Unique key for each item
+                    key: ValueKey(transaction),
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
@@ -165,15 +107,11 @@ class _DashboardState extends State<Dashboard> {
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
                     onDismissed: (direction) {
-                     // Get the category
-                      int transactionIndex = recentTransactions.indexOf(transaction); // Get the index
-
-                      // Call the removeTransaction method with category and index
-                     print("Hello");
-                     // _controller.removeTransaction(transaction, index);
+                      // Remove transaction and show a Snackbar
+                      _controller.removeTransaction(transaction, index);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('${transaction.catagory} dismissed'),
+                          content: Text('${transaction.category} dismissed'),
                         ),
                       );
                     },
@@ -181,7 +119,9 @@ class _DashboardState extends State<Dashboard> {
                       type: transaction.type,
                       amount: transaction.amount,
                       date: transaction.date,
-                      category: transaction.catagory, onDismissed: (String category, DateTime date) {  },
+                      category: transaction.category, onDismissed: (String category, DateTime date) { 
+                        _controller.removeTransaction(transaction,index);
+                       },
                     ),
                   );
                 },
@@ -190,6 +130,56 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+    );
+  }
+
+  Column _buildBalanceColumn(String title, RxDouble value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Obx(() => Text(
+              value.value.toStringAsFixed(2),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+      ],
+    );
+  }
+
+  Row _buildTransactionsHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "Transactions",
+          style: TextStyle(
+              color: AppColors.textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+        InkWell(
+          onTap: () {
+            Get.to(() => const DetailScreen());
+          },
+          child: const Text(
+            "View All",
+            style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 }

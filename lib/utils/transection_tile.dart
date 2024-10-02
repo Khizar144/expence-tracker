@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:expencetracker/constants/app_colors.dart';
 import 'package:expencetracker/model/catagory_icons.dart';
@@ -13,7 +12,7 @@ class TransectionTile extends StatefulWidget {
   final Function(String category, DateTime date) onDismissed; // Updated signature
   final String type;
 
-  TransectionTile({
+  const TransectionTile({
     super.key,
     required this.category, // Updated to category
     required this.amount,
@@ -36,7 +35,7 @@ class _TransectionTileState extends State<TransectionTile> {
         decoration: BoxDecoration(
           color: Colors.redAccent,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 5,
@@ -45,7 +44,7 @@ class _TransectionTileState extends State<TransectionTile> {
           ],
         ),
         alignment: Alignment.center,
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.delete, color: Colors.white, size: 30),
@@ -74,7 +73,7 @@ class _TransectionTileState extends State<TransectionTile> {
           color: Colors.transparent,
           elevation: 20,
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white.withOpacity(.1),
@@ -89,10 +88,10 @@ class _TransectionTileState extends State<TransectionTile> {
                       CategoryIcon.getIconForCategory(widget.type),
                       height: Get.height * 0.06,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
-                      widget.category,
-                      style: TextStyle(
+                      widget.type,
+                      style: const TextStyle(
                         color: AppColors.textColor,
                         fontSize: 14,
                       ),
@@ -104,14 +103,14 @@ class _TransectionTileState extends State<TransectionTile> {
                   children: [
                     Text(
                       widget.amount.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textColor,
                         fontSize: 12,
                       ),
                     ),
                     Text(
                       DateFormat('dd/MM/yyyy').format(widget.date),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.textColor,
                         fontSize: 10,
                       ),

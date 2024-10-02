@@ -1,15 +1,18 @@
 import 'dart:math';
 
-import 'package:expencetracker/model/Transaction.dart';
+
+import 'package:expencetracker/database/database_helper.dart';
+import 'package:expencetracker/model/my_transaction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class TransectionController  extends GetxController{
+ final DatabaseHelper _dbHelper = DatabaseHelper();
 
 
-RxList Income=<Transaction>[].obs;
-RxList expense=<Transaction>[].obs;
+RxList Income=<MyTransaction>[].obs;
+RxList expense=<MyTransaction>[].obs;
 
 RxDouble totalIncome=0.0.obs;
 
@@ -26,22 +29,22 @@ void addTransaction(String catagory,String type,double amount,DateTime date)
 
 {
 
-  Transaction transaction = Transaction(catagory: catagory,type: type,amount: amount,date: date, category: '');
+  MyTransaction mytransaction = MyTransaction(category: catagory,type: type,amount: amount,date: date,);
   if (catagory=='Income')
 {
-Income.add(transaction);
-print("amoiunt add "+amount.toString());
+Income.add(mytransaction);
+print("amoiunt add $amount");
 totalIncome.value+=amount;
 }else if(catagory=='Expense')
 {
-expense.add(transaction);
+expense.add(mytransaction);
 totalExpense.value+=amount;
 
 }
 
 totalbalance.value=totalIncome.value-totalExpense.value;
 update();
-
+_dbHelper.insertTransaction(mytransaction);
 }
 
 
@@ -52,17 +55,17 @@ update();
   }
 
 
-void removeTransaction(Transaction transaction, int index) {
+void removeTransaction(MyTransaction transaction, int index) {
   print("Methode called");
-  if (transaction.catagory == 'Income') {
+  if (transaction.category == 'Income') {
     print("Income");
     totalIncome.value -= transaction.amount;
     Income.remove(transaction);
-     // Subtract the removed amount from total Income
-  } else if (transaction.catagory == 'Expense') {
+     
+  } else if (transaction.category == 'Expense') {
       totalExpense.value -= transaction.amount; 
     expense.remove(transaction);
-  // Subtract the removed amount from total Expense
+  
   }
 
   // Update the total balance
@@ -73,11 +76,11 @@ void removeTransaction(Transaction transaction, int index) {
 
 
   //get list of specified category
-List<Transaction> getTransactions(String category) {
+List<MyTransaction> getTransactions(String category) {
     if (category == 'Income') {
-      return List<Transaction>.from(Income); // Convert RxList to List<Transaction>
+      return List<MyTransaction>.from(Income); 
     } else if (category == 'Expense') {
-      return List<Transaction>.from(expense); // Convert RxList to List<Transaction>
+      return List<MyTransaction>.from(expense); 
     }
     return [];
   }

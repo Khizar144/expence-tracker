@@ -42,40 +42,52 @@ class _AddExpenceState extends State<AddExpence> {
   }
 
   // Save transaction
-  void _saveTransaction() async {
-    if (_selectedCategory != null && _selectedType != null && _selectedDate != null) {
-      double amount = double.tryParse(_amountController.text) ?? 0;
+ // Save transaction
+void _saveTransaction() async {
+  if (_selectedCategory != null && _selectedType != null && _selectedDate != null) {
+    double amount = double.tryParse(_amountController.text) ?? 0;
 
-  
-
-      // Call the addTransaction method in the controller
-       _controller.addTransaction(_selectedCategory!, _selectedType!, amount, _selectedDate!);
-
-      // Close the loading dialog
-      Get.back(); // Close loading dialog
-
-      // Go back after saving
-      Get.back();
-
-      // Show success message
-      Get.snackbar(
-        "Message",
-        "Data added successfully",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-    } else {
-      // Handle error for missing fields
+    if (amount <= 0) {
       Get.snackbar(
         "Error",
-        "Please fill in all fields",
+        "Amount must be greater than zero",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return;
     }
+
+    // Call the addTransaction method in the controller
+    _controller.addTransaction(_selectedCategory!, _selectedType!, amount, _selectedDate!);
+Get.back();
+    // Clear inputs after saving
+    _amountController.clear();
+    setState(() {
+      _selectedCategory = null;
+      _selectedType = null;
+      _selectedDate = null;
+    });
+
+    // Show success message
+    Get.snackbar(
+      "Message",
+      "Data added successfully",
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+  } else {
+    // Handle error for missing fields
+    Get.snackbar(
+      "Error",
+      "Please fill in all fields",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
   }
+}
 
   @override
   void dispose() {
@@ -93,7 +105,7 @@ class _AddExpenceState extends State<AddExpence> {
           child: Column(
             children: [
               SizedBox(height: Get.height * 0.08),
-              Center(
+              const Center(
                 child: Text(
                   "Add Expense",
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
@@ -105,7 +117,7 @@ class _AddExpenceState extends State<AddExpence> {
               Card(
                 color: Colors.white.withOpacity(.1),
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   width: Get.width * 0.8,
                   height: Get.height * 0.09,
                   decoration: BoxDecoration(
@@ -117,11 +129,11 @@ class _AddExpenceState extends State<AddExpence> {
                       FilteringTextInputFormatter.digitsOnly, // Allow only digits
                       LengthLimitingTextInputFormatter(5), // Restrict to 5 digits
                     ],
-                    style: TextStyle(color: AppColors.textColor, fontSize: 45, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: AppColors.textColor, fontSize: 45, fontWeight: FontWeight.bold),
                     keyboardType: TextInputType.number,
                     showCursor: false,
                     textAlign: TextAlign.center,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "0",
                       hintStyle: TextStyle(color: AppColors.textColor, fontSize: 45, fontWeight: FontWeight.bold),
                       border: InputBorder.none,
@@ -135,14 +147,14 @@ class _AddExpenceState extends State<AddExpence> {
               Card(
                 color: Colors.white.withOpacity(.1),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   width: Get.width * 0.9,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: DropdownButton<String>(
                     value: _selectedCategory,
-                    hint: Text(
+                    hint: const Text(
                       "Select Category",
                       style: TextStyle(color: AppColors.textColor),
                     ),
@@ -160,14 +172,14 @@ class _AddExpenceState extends State<AddExpence> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(color: AppColors.textColor),
+                          style: const TextStyle(color: AppColors.textColor),
                         ),
                       );
                     }).toList(),
-                    style: TextStyle(color: AppColors.textColor, fontSize: 20),
+                    style: const TextStyle(color: AppColors.textColor, fontSize: 20),
                     isExpanded: true,
-                    underline: SizedBox(),
-                    icon: Icon(
+                    underline: const SizedBox(),
+                    icon: const Icon(
                       Icons.arrow_drop_down,
                       color: AppColors.textColor,
                       size: 30,
@@ -182,14 +194,14 @@ class _AddExpenceState extends State<AddExpence> {
               Card(
                 color: Colors.white.withOpacity(0.1),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   width: Get.width * 0.9,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: DropdownButton<String>(
                     value: _selectedType,
-                    hint: Text(
+                    hint: const Text(
                       "Select Type",
                       style: TextStyle(color: AppColors.textColor),
                     ),
@@ -204,14 +216,14 @@ class _AddExpenceState extends State<AddExpence> {
                         ? _categoryTypes[_selectedCategory]!.map<DropdownMenuItem<String>>((String type) {
                             return DropdownMenuItem<String>(
                               value: type,
-                              child: Text(type, style: TextStyle(color: AppColors.textColor)),
+                              child: Text(type, style: const TextStyle(color: AppColors.textColor)),
                             );
                           }).toList()
                         : [],
-                    style: TextStyle(color: AppColors.textColor, fontSize: 20),
+                    style: const TextStyle(color: AppColors.textColor, fontSize: 20),
                     isExpanded: true,
-                    underline: SizedBox(),
-                    icon: Icon(
+                    underline: const SizedBox(),
+                    icon: const Icon(
                       Icons.arrow_drop_down,
                       color: AppColors.textColor,
                       size: 30,
@@ -228,14 +240,14 @@ class _AddExpenceState extends State<AddExpence> {
                 child: GestureDetector(
                   onTap: () => _selectDate(context),
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     width: Get.width * 0.9,
                     height: Get.height * 0.06,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Container(
-                      padding: EdgeInsets.only(left: 8, right: 8),
+                      padding: const EdgeInsets.only(left: 8, right: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -243,9 +255,9 @@ class _AddExpenceState extends State<AddExpence> {
                             _selectedDate == null
                                 ? 'Select Date'
                                 : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-                            style: TextStyle(color: AppColors.textColor, fontSize: 20),
+                            style: const TextStyle(color: AppColors.textColor, fontSize: 20),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.calendar_today,
                             color: AppColors.textColor,
                             size: 20,
@@ -266,7 +278,7 @@ class _AddExpenceState extends State<AddExpence> {
                   height: Get.height * 0.07,
                   width: Get.width * 0.8,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         Color(0xFFFC466B),
                         Color(0xFF3F5EFB),
@@ -276,7 +288,7 @@ class _AddExpenceState extends State<AddExpence> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Save",
                       style: TextStyle(

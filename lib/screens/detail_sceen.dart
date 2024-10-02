@@ -23,8 +23,8 @@ class _DetailScreenState extends State<DetailScreen> {
         leading: IconButton(onPressed: (){
 
           Get.back();
-        }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
-        title: Text(
+        }, icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+        title: const Text(
           "Transaction",
           style: TextStyle(color: Colors.white),
         ),
@@ -46,7 +46,7 @@ class _DetailScreenState extends State<DetailScreen> {
               children: [
                 Text(
                   DateFormat('MMMM').format(DateTime.now()),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
@@ -61,7 +61,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
                   return Text(
                     "RS$totalAmount",
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    style: const TextStyle(color: Colors.white, fontSize: 15),
                   );
                 }),
               ],
@@ -85,9 +85,9 @@ class _DetailScreenState extends State<DetailScreen> {
                     type: transaction.type,
                     amount: transaction.amount,
                     date: transaction.date,
-                    category: transaction.catagory,
+                    category: transaction.category,
                     onDismissed: (String type, DateTime date) {
-                    
+                    _controller.removeTransaction(transaction, index);
                     }, 
                   );
                   },

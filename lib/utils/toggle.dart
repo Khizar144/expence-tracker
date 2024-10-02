@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 class IncomeExpenseToggle extends StatelessWidget {
   final TransectionController transectionController = Get.find();
 
+   IncomeExpenseToggle({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -38,12 +40,12 @@ class IncomeExpenseToggle extends StatelessWidget {
           children: [
             // Income Button
             AnimatedContainer(
-              duration: Duration(milliseconds: 900),
+              duration: const Duration(milliseconds: 900),
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 gradient: transectionController.selectedCategory.value == 'Income'
-                    ? LinearGradient(
+                    ? const LinearGradient(
                         colors: [Colors.blue, Colors.purple, Colors.pink],
                       )
                     : null,
@@ -60,12 +62,12 @@ class IncomeExpenseToggle extends StatelessWidget {
             ),
             // Expenses Button
             AnimatedContainer(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 gradient: transectionController.selectedCategory.value == 'Expense'
-                    ? LinearGradient(
+                    ? const LinearGradient(
                         colors: [Colors.blue, Colors.purple, Colors.pink],
                       )
                     : null,
